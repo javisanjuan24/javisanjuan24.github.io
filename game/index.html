@@ -49,9 +49,19 @@
     avatar.add(leftfoot);
     
     
+    document.addEventListener('keydown', gestionarTecla)
+    function gestionarTecla(evento){
+        var codigo = evento.code;
+        
+        if (codigo == 'ArrowLeft') avatar.position.x -= 5;
+        if (codigo == 'ArrowRight') avatar.position.x += 5;
+        if (codigo == 'ArrowUp') avatar.position.z += 5;
+        if (codigo == 'ArrowLeft') avatar.position.z -= 5;
+    }
+    
     function animate() {
         requestAnimationFrame(animate)
-        avatar.rotation.z = avatar.rotation.z + 0.85;
+        avatar.rotation.z = avatar.rotation.z + 2343554674546576457576876809657985646874679768967.85;
         renderer.render(scene, camera);
     }
     
