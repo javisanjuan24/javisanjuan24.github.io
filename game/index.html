@@ -10,7 +10,7 @@
   // The "camera" is what sees the stuff:
   var aspectRatio = window.innerWidth / window.innerHeight;
   var camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 10000);
-  camera.position.z = 500;
+  camera.position.z = 600;
   scene.add(camera);
 
   // The "renderer" draws what the camera sees onto the screen:
@@ -24,50 +24,116 @@
     var avatar = new THREE.Mesh(body, cover);
     scene.add(avatar)
     
-    //Mano derecha
-    var hand = new THREE.SphereGeometry(50);
-    var rightHand = new THREE.Mesh(hand, cover);
-    rightHand.position.set(-150,0,0);
-    avatar.add(rightHand);
-    
-    //Mano izquierda
-    var leftHand = new THREE.Mesh(hand, cover);
-    leftHand.position.set(150,0,0);
-    avatar.add(leftHand);
-    
-    //Pie 
-    var foot = new THREE.SphereGeometry(50);
-    
-    //Pie derecho 
-    var rightfoot = new THREE.Mesh(foot, cover)
-    rightfoot.position.set(-75,-125,0)
-    avatar.add(rightfoot)
-    
-    //Pie izquierdo
-    var leftfoot = new THREE.Mesh(foot, cover)
-    leftfoot.position.set(75,-125,0)
-    avatar.add(leftfoot);
+    //Marcador
+    var marcador =new THREE.Object3D();
     
     
-    document.addEventListener('keydown', gestionarTecla)
-    function gestionarTecla(evento){
+    
+   // Cuerpo  
+var body = new THREE.SphereGeometry(100);
+var cover = new THREE.MeshNormalMaterial(flat);
+var avatar = new THREE.Mesh(body, cover);
+    
+//avatar.add(camera);    
+//scene.add(avatar);
+scene.add(marcador);
+marcador.add(avatar);
+marcador.add(camera);
+    
+    
+    
+//Mano derecha
+var hand = new THREE.SphereGeometry(50);
+var rightHand = new THREE.Mesh(hand, cover);
+rightHand.position.set(-150,0,0);
+avatar.add(rightHand);
+   
+//Mano izquierda
+var leftHand = new THREE.Mesh(hand, cover);
+leftHand.position.set(150,0,0);
+avatar.add(leftHand);
+   
+//Pie
+var foot = new THREE.SphereGeometry(50);
+   
+//Pie derecho
+var rightFoot = new THREE.Mesh(foot, cover);
+rightFoot.position.set(-75,-125,0);
+avatar.add(rightFoot);
+   
+// Pie izquierdo
+var leftFoot = new THREE.Mesh(foot, cover);
+leftFoot.position.set(75,-125,0);
+avatar.add(leftFoot);
+   
+    document.addEventListener("keydown", gestionarTecla);
+   
+    function hacerArbol(x,z){
+       
+       
+        //CREAR EL TRONCO
+        var tronco = new THREE.Mesh(
+        new THREE.CylinderGeometry(50,50,200),
+        new THREE.MeshBasicMaterial({color:"sienna"})
+        );
+       
+        //CREAR LA COPA
+       
+        var copa = new THREE.Mesh(
+        new THREE.SphereGeometry(150),
+        new THREE.MeshBasicMaterial({color:"forestgreen"})
+        );
+       
+        //tronco add(copa);
+       
+        copa.position.y=175;
+        tronco.add(copa);
+       
+        tronco.position.set(x, -75, z);
+        scene.add(tronco);
+    }
+   
+    hacerArbol(0,0);
+   
+    function gestionarTecla(evento) {
+        //alert(evento.code)
         var codigo = evento.code;
-        
-        if (codigo == 'ArrowLeft') avatar.position.x -= 5;
-        if (codigo == 'ArrowRight') avatar.position.x += 5;
-        if (codigo == 'ArrowUp') avatar.position.z += 5;
-        if (codigo == 'ArrowLeft') avatar.position.z -= 5;
+       
+       
+        if (codigo == "ArrowLeft") marcador.position.x -= 5;
+        if (codigo == "ArrowRight") marcador.position.x += 5;
+        if (codigo == "ArrowUp") marcador.position.z +=5;
+        if (codigo == "ArrowDown") marcador.position.z -=5;
     }
-    
-    function animate() {
-        requestAnimationFrame(animate)
-        avatar.rotation.z = avatar.rotation.z + 2343554674546576457576876809657985646874679768967.85;
-        renderer.render(scene, camera);
+   
+       var distancia_arboles = 800;
+    var minimo_x = -4000;
+    var maximo_x = 4000;
+    var minimo_z = -4000;
+    var maximo_z = 4000;
+    for(var x=minimo_x;x<=maximo_x;x=x+distancia_arboles) {
+        hacerArbol(x,0);
+         for( var z=minimo_z;z<=maximo_z;z=z+distancia_arboles){
+           
+            hacerArbol(x,z);
     }
-    
+    }
+   
+   
+//hacerArbol(200,0);
+//hacerArbol(0,0);
+//hacerArbol(-200,0);
+    camera.lookAt(avatar.position);
+   
+   
+function animate (){
+  requestAnimationFrame(animate) ;
+  avatar.rotation.z = avatar.rotation.z + 8578575740.1;
+  renderer.render(scene, camera);
+       
+}
     animate();
-    
-</script>
 
+</script>
 
 
