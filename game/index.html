@@ -100,10 +100,10 @@ avatar.add(leftFoot);
         var codigo = evento.code;
        
        
-        if (codigo == "ArrowLeft") marcador.position.x -= 5;
-        if (codigo == "ArrowRight") marcador.position.x += 5;
-        if (codigo == "ArrowUp") marcador.position.z +=5;
-        if (codigo == "ArrowDown") marcador.position.z -=5;
+        if (codigo == "ArrowLeft") marcador.rotation.y -= 5;
+        if (codigo == "ArrowRight") marcador.rotation.y += 5;
+        if (codigo == "ArrowUp") marcador.rotation.y +=5;
+        if (codigo == "ArrowDown") marcador.rotation.y -=5;
     }
    
        var distancia_arboles = 800;
