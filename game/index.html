@@ -68,6 +68,8 @@ avatar.add(leftFoot);
    
     document.addEventListener("keydown", gestionarTecla);
    
+    //Lista de objetos que no podemos atravesar
+    var noPermitido = [];
     function hacerArbol(x,z){
        
        
@@ -91,8 +93,27 @@ avatar.add(leftFoot);
        
         tronco.position.set(x, -75, z);
         scene.add(tronco);
-    }
+    
    
+        //Añadir circulo de contro del limite
+    var circulo = new THREE.CircleGeometry(300);
+    var circulo_t = new THREE.MeshNormalMaterial();
+    var limite = new THREE.Mesh(circulo, circulo_t);
+    
+    limite.position.y = -100;
+    limite.rotation.x =  -Math.PI/2
+    limite.position.x = -Math.PI/2
+    tronco.add(limite);
+    noPermitido.push(limite);
+    
+    scene.add(tronco);
+    
+    }
+    
+    
+    
+    
+    
     hacerArbol(0,0);
    
     function gestionarTecla(evento) {
@@ -103,7 +124,7 @@ avatar.add(leftFoot);
         if (codigo == "ArrowLeft") marcador.rotation.y += 0.1;
         if (codigo == "ArrowRight") marcador.rotation.y -= 0.1;
         if (codigo == "ArrowUp") avanzar(marcador, marcador.rotation.y, false);
-        if (codigo == "ArrowDown")avanzar(marcador, marcador.rotation.y, true);
+        if (codigo == "ArrowDown")avanzar(marcador, marcador.rotation.y+ Math.PI);
         if (codigo == "KeyG"){
             girando == !girando;
         }
@@ -111,11 +132,7 @@ avatar.add(leftFoot);
    
     
     function avanzar(objeto, radianes, atrás = false){
-        //Para que pueda ir hacia atrás con los cursores
-        if (atrás) {
-            radianes = radianes + Math.PI;
-        }
-        var grados = 180*radianes / Math.PI + 90;;
+        var grados = (180*radianes / Math.PI);
         
         
         console.log("Grados:" + grados);
@@ -124,10 +141,26 @@ avatar.add(leftFoot);
         console.log("Z:" + objeto.position.z);
         console.log("Cos(grados):" + Math.cos(radianes));
         console.log("Sen(grados):" + Math.sin(radianes));
-       
         
-        objeto.position.x += 20*Math.sin(radianes);
-        objeto.position.z += 20*Math.cos(radianes);
+        
+        var inc_x = -20*Math.sin(radianes);
+        var inc_z = -20*Math.cos(radianes);
+        
+        objeto.position.x += inc_x;
+        objeto.position.z += inc_z
+        
+        // TODO: Comprobar si hemos colisionado
+        // Si colisionamos deshacenos el paso.
+        if (hayColision()) {
+            // Si colisionamos deshacemos el paso.
+
+            objeto.position.x += inc_x;
+            objeto.position.z += inc_z;
+        }
+        
+    }
+    function hayColision() {
+        return false;
     }
     
        var distancia_arboles = 800;
@@ -143,7 +176,6 @@ avatar.add(leftFoot);
     }
     }
    
-   
 //hacerArbol(200,0);
 //hacerArbol(0,0);
 //hacerArbol(-200,0);
@@ -152,7 +184,7 @@ avatar.add(leftFoot);
    
 function animate (){
   requestAnimationFrame(animate) ;
-  avatar.rotation.z = avatar.rotation.z + 0.1;
+  avatar.rotation.z = avatar.rotation.z + 0.15;
   renderer.render(scene, camera);
        
 }
