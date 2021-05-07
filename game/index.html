@@ -34,11 +34,11 @@ var body = new THREE.SphereGeometry(100);
 var cover = new THREE.MeshNormalMaterial(flat);
 var avatar = new THREE.Mesh(body, cover);
     
-//avatar.add(camera);    
+//avatar.add(camera);
+//scene.add(camera);
 //scene.add(avatar);
-scene.add(marcador);
-marcador.add(avatar);
-marcador.add(camera);
+
+
     
     
     
@@ -65,6 +65,13 @@ avatar.add(rightFoot);
 var leftFoot = new THREE.Mesh(foot, cover);
 leftFoot.position.set(75,-125,0);
 avatar.add(leftFoot);
+    
+scene.add(marcador);
+marcador.add(avatar);
+    
+marcador.add(camera);
+
+marcador.position.x = 400;
    
     document.addEventListener("keydown", gestionarTecla);
    
@@ -147,19 +154,31 @@ avatar.add(leftFoot);
         var inc_z = -20*Math.cos(radianes);
         
         objeto.position.x += inc_x;
-        objeto.position.z += inc_z
+        objeto.position.z += inc_z;
         
         // TODO: Comprobar si hemos colisionado
         // Si colisionamos deshacenos el paso.
         if (hayColision()) {
             // Si colisionamos deshacemos el paso.
 
-            objeto.position.x += inc_x;
-            objeto.position.z += inc_z;
+            objeto.position.x -= inc_x;
+            objeto.position.z -= inc_z;
         }
         
     }
+    
+    
+    //Revisa si el avatar colisiona con un objeto de la lista niPermitido
+    //Devuelve true si hay colision, y false si no la hay.
     function hayColision() {
+        var vector = new THREE.Vector3(0,-1,0);
+        var raycaster = new THREE.Raycaster(marcador.position, vector);
+        
+        var colisionados = raycaster.intersectObjects(noPermitido);
+        
+        if (colisionados.length > 0) return true;
+        
+        
         return false;
     }
     
